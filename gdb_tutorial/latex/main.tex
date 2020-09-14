@@ -1,0 +1,116 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xpatch}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{realboxes}
+\usetheme{AnnArbor}
+\usecolortheme{beaver}
+\setbeamercolor{titlelike}{parent=structure,bg=white}
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{itemize subitem}{fg=black}
+\setbeamercolor{itemize subsubitem}{fg=black}
+
+\setbeamertemplate{itemize item}[square]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{itemize subsubitem}[triangle]
+
+\setbeamercolor{block title}{bg=black!5,fg=black}
+
+\definecolor{mygray}{rgb}{0.8,0.8,0.8}
+\lstset{
+  basicstyle=\ttfamily,
+  backgroundcolor=\color{mygray},
+}
+
+\makeatletter
+\xpretocmd\lstinline{\Colorbox{mygray}\bgroup\appto\lst@DeInit{\egroup}}{}{}
+\makeatother
+
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}Sistemas operativos
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.6\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{1ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\title{GDB guide}
+\author{jorge.gonzalez, martin.carrasco}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{What is GDB?}
+    \begin{itemize}
+        \item<1-> It's the GNU Project Debugger
+        \item<2-> Allows you to analyze a running program
+        \item<3-> Print variable names, change variable values, stop at certain conditions, etc.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{How to use GDB}
+	\begin{itemize}
+    	\item<1-> Start GDB session for a program: \lstinline{gdb <program>}
+    	\item<2-> Start program execution \lstinline{run}
+    	\item<3-> Setup  a breakpoint where execution will stop \lstinline{break <file>:<line>} \lstinline{disable <num>} \lstinline{info <breakpoint>}
+    	\item<4-> Execute current line and break at next \lstinline{next}
+    	\item<5-> Run a trace of the calls that led to current point \lstinline{backtrace}
+   		\item<6-> Print a variable content \lstinline{print <var>} \lstinline{set <expression>}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Configurations for GDB}
+	\begin{itemize}
+        \item Install GDB
+    	\item Define GDBMacros variable in the local enviroment
+        \item Run docker container (if you are using one ) with \lstinline{docker run --cap-add=SYS_PTRACE --security-opt} \par \lstinline{seccomp=unconfined}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{GDB in PintOS}
+	\begin{itemize}
+		\item<1-> \textbf{Shell1}: Start PintOS \lstinline{pintos --gdb -- run mytest}
+		\item<2-> \textbf{Shell2}: Load binary \lstinline{pintos-gdb kernel.o}
+        \item<3-> \textbf{Shell2}: Attach to proccess \lstinline{target remote localhost:1234}
+        \item<4-> Start debbuging by pressing \lstinline{c}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Configuration for GDB: Graphical}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{attach.png}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Usefull PintOS-GDB macros}
+	\begin{itemize}
+    	\item \textbf{btthread thread}: Run a backtrace on a specific thread
+    	\item \textbf{dumplist list-name list-type element}: Print the element of a given list
+    	\item \textbf{hook-stop}: This is called everytime a pagefault occurs
+    	\item \textbf{btthreadlist list-name element}: Shows the backtrace of all the threads contained in the list
+    	\item \textbf{btpagefault}:Backtrace of a thread after a page fault.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Usage example: Alarm Clock}
+    Live example
+\end{frame}
+
+\begin{frame}{Bibliography}
+    \href{https://beej.us/guide/bggdb/}
+    \href{https://web.stanford.edu/class/cs140/projects/pintos/pintos.pdf}
+\end{frame}
+
+\end{document}
